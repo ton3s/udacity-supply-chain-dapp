@@ -156,8 +156,8 @@ contract SupplyChain {
   }
 
   // Define a function 'harvestItem' that allows a farmer to mark an item 'Harvested'
-  function harvestItem(uint _upc, address _originFarmerID, string memory _originFarmName, string memory _originFarmInformation, string  memory _originFarmLatitude, string memory _originFarmLongitude, string memory _productNotes) public 
-  {
+  function harvestItem(uint _upc, address _originFarmerID, string memory _originFarmName, string memory _originFarmInformation, string  memory _originFarmLatitude, string memory _originFarmLongitude, string memory _productNotes) public {
+    
     // Add the new item as part of Harvest
     items[sku] = Item({
       sku: sku,
@@ -176,6 +176,7 @@ contract SupplyChain {
       retailerID: address(0),
       consumerID: address(0)
     });
+
     // Emit the appropriate event
     emit Harvested(sku);
     
@@ -184,16 +185,15 @@ contract SupplyChain {
   }
 
   // Define a function 'processtItem' that allows a farmer to mark an item 'Processed'
-  function processItem(uint _upc) public 
   // Call modifier to check if upc has passed previous supply chain stage
-  
   // Call modifier to verify caller of this function
-  
-  {
+  function processItem(uint _upc) harvested(_upc) verifyCaller(items[_upc].originFarmerID) public {
+
     // Update the appropriate fields
-    
+    items[_upc].itemState = State.Processed;
+
     // Emit the appropriate event
-    
+    emit Processed(_upc);
   }
 
   // Define a function 'packItem' that allows a farmer to mark an item 'Packed'
