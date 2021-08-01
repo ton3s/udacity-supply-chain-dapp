@@ -197,16 +197,15 @@ contract SupplyChain {
   }
 
   // Define a function 'packItem' that allows a farmer to mark an item 'Packed'
-  function packItem(uint _upc) public 
   // Call modifier to check if upc has passed previous supply chain stage
-  
   // Call modifier to verify caller of this function
-  
-  {
+  function packItem(uint _upc) processed(_upc) verifyCaller(items[_upc].originFarmerID) public {
+    
     // Update the appropriate fields
-    
+    items[_upc].itemState = State.Packed;
+
     // Emit the appropriate event
-    
+    emit Packed(_upc);
   }
 
   // Define a function 'sellItem' that allows a farmer to mark an item 'ForSale'
