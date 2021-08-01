@@ -176,12 +176,12 @@ contract SupplyChain {
       retailerID: address(0),
       consumerID: address(0)
     });
-
-    // Emit the appropriate event
-    emit Harvested(sku);
     
     // Increment sku
     sku = sku + 1;
+
+    // Emit the appropriate event
+    emit Harvested(_upc);
   }
 
   // Define a function 'processtItem' that allows a farmer to mark an item 'Processed'
@@ -224,21 +224,22 @@ contract SupplyChain {
   // Define a function 'buyItem' that allows the disributor to mark an item 'Sold'
   // Use the above defined modifiers to check if the item is available for sale, if the buyer has paid enough, 
   // and any excess ether sent is refunded back to the buyer
-  function buyItem(uint _upc) public payable 
-    // Call modifier to check if upc has passed previous supply chain stage
-    
-    // Call modifer to check if buyer has paid enough
-    
-    // Call modifer to send any excess ether back to buyer
-    
-    {
+  // Call modifier to check if upc has passed previous supply chain stage
+  // Call modifer to check if buyer has paid enough
+  // Call modifer to send any excess ether back to buyer
+  function buyItem(uint _upc) forSale(_upc) paidEnough(items[_upc].productPrice) checkValue(_upc) public payable {
     
     // Update the appropriate fields - ownerID, distributorID, itemState
-    
+    items[_upc].ownerID = msg.sender;
+    items[_upc].distributorID = msg.sender;
+    items[_upc].itemState = State.Sold;
+
     // Transfer money to farmer
-    
+    address payable farmer = address(uint160(items[_upc].originFarmerID));
+    farmer.transfer(items[_upc].productPrice);
+
     // emit the appropriate event
-    
+    emit Sold(_upc);
   }
 
   // Define a function 'shipItem' that allows the distributor to mark an item 'Shipped'
