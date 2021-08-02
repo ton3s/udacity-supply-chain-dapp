@@ -335,7 +335,41 @@ contract('SupplyChain', function (accounts) {
 		const supplyChain = await SupplyChain.deployed()
 
 		// Retrieve the just now saved item from blockchain by calling function fetchItem()
+		const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc)
 
 		// Verify the result set:
+		assert.equal(resultBufferTwo[0], sku, 'Error: Missing or Invalid sku')
+		assert.equal(resultBufferTwo[1], upc, 'Error: Missing or Invalid upc')
+		assert.equal(
+			resultBufferTwo[2],
+			productID,
+			'Error: Missing or Invalid productID'
+		)
+		assert.equal(
+			resultBufferTwo[3],
+			productNotes,
+			'Error: Missing or Invalid productNotes'
+		)
+		assert.equal(
+			resultBufferTwo[4],
+			productPrice,
+			'Error: Missing or Invalid productPrice'
+		)
+		assert.equal(resultBufferTwo[5], 7, 'Error: Missing or Invalid itemState')
+		assert.equal(
+			resultBufferTwo[6],
+			distributorID,
+			'Error: Missing or Invalid distributorID'
+		)
+		assert.equal(
+			resultBufferTwo[7],
+			retailerID,
+			'Error: Missing or Invalid retailerID'
+		)
+		assert.equal(
+			resultBufferTwo[8],
+			consumerID,
+			'Error: Missing or Invalid consumerID'
+		)
 	})
 })
