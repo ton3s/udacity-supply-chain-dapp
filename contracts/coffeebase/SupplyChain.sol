@@ -74,7 +74,7 @@ contract SupplyChain is Ownable, FarmerRole, ConsumerRole, RetailerRole, Distrib
 
   // Define a modifier that checks if the paid amount is sufficient to cover the price
   modifier paidEnough(uint _price) { 
-    require(msg.value >= _price); 
+    require(msg.value >= _price, "Ether sent is less than the price"); 
     _;
   }
   
@@ -223,7 +223,7 @@ contract SupplyChain is Ownable, FarmerRole, ConsumerRole, RetailerRole, Distrib
   // Call modifier to check if upc has passed previous supply chain stage
   // Call modifer to check if buyer has paid enough
   // Call modifer to send any excess ether back to buyer
-  function buyItem(uint _upc) forSale(_upc) paidEnough(items[_upc].productPrice) checkValue(_upc) public payable {
+  function buyItem(uint _upc) forSale(_upc) paidEnough(items[_upc].productPrice) checkValue(_upc) onlyDistributor  public payable {
     
     // Update the appropriate fields - ownerID, distributorID, itemState
     items[_upc].ownerID = msg.sender;
@@ -242,7 +242,7 @@ contract SupplyChain is Ownable, FarmerRole, ConsumerRole, RetailerRole, Distrib
   // Use the above modifers to check if the item is sold
   // Call modifier to check if upc has passed previous supply chain stage
   // Call modifier to verify caller of this function
-  function shipItem(uint _upc) sold(_upc) verifyCaller(items[_upc].distributorID) public {
+  function shipItem(uint _upc) sold(_upc) verifyCaller(items[_upc].distributorID) onlyDistributor public {
 
     // Update the appropriate fields
     items[_upc].itemState = State.Shipped;

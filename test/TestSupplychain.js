@@ -15,7 +15,7 @@ contract('SupplyChain', function (accounts) {
 	const originFarmLongitude = '144.341490'
 	var productID = sku + upc
 	const productNotes = 'Best beans for Espresso'
-	const productPrice = web3.utils.toWei('1', 'ether')
+	const productPrice = web3.utils.toWei('0.01', 'ether')
 	var itemState = 0
 	const distributorID = accounts[2]
 	const retailerID = accounts[3]
@@ -148,7 +148,7 @@ contract('SupplyChain', function (accounts) {
 		// Verify the result set
 		assert.equal(
 			resultBufferTwo[4],
-			web3.utils.toWei('1', 'ether'),
+			productPrice,
 			'Error: Missing or Invalid productPrice'
 		)
 		assert.equal(resultBufferTwo[5], 3, 'Error: Invalid item State')
@@ -161,16 +161,46 @@ contract('SupplyChain', function (accounts) {
 	it('Testing smart contract function buyItem() that allows a distributor to buy coffee', async () => {
 		const supplyChain = await SupplyChain.deployed()
 
-		// Declare and Initialize a variable for event
+		// Add distributer
+		await supplyChain.addDistributor(distributorID)
 
-		// Watch the emitted event Sold()
-		var event = supplyChain.Sold()
+		// Balances of farmer before the transaction
+		const origFarmerBalance = await web3.eth.getBalance(originFarmerID)
 
 		// Mark an item as Sold by calling function buyItem()
+		const txReceipt = await supplyChain.buyItem(upc, {
+			from: distributorID,
+			to: supplyChain.address,
+			value: productPrice,
+		})
 
 		// Retrieve the just now saved item from blockchain by calling function fetchItem()
+		const resultBufferOne = await supplyChain.fetchItemBufferOne.call(upc)
+		const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc)
 
 		// Verify the result set
+		assert.equal(
+			resultBufferOne[2],
+			distributorID,
+			'Error: Missing or Invalid ownerId'
+		)
+		assert.equal(
+			resultBufferTwo[6],
+			distributorID,
+			'Error: Missing or Invalid distributorId'
+		)
+		assert.equal(resultBufferTwo[5], 4, 'Error: Invalid item State')
+
+		// Farmer's balance has increased by productPrice
+		const newFarmerBalance = await web3.eth.getBalance(originFarmerID)
+		assert.equal(
+			parseInt(origFarmerBalance) + parseInt(productPrice),
+			newFarmerBalance,
+			'Error: Farmer balance did not update correctly'
+		)
+
+		// Watch the emitted event Sold()
+		truffleAssert.eventEmitted(txReceipt, 'Sold')
 	})
 
 	// 6th Test
