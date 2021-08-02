@@ -226,15 +226,33 @@ contract('SupplyChain', function (accounts) {
 	it('Testing smart contract function receiveItem() that allows a retailer to mark coffee received', async () => {
 		const supplyChain = await SupplyChain.deployed()
 
-		// Declare and Initialize a variable for event
+		// Add retailer
+		await supplyChain.addRetailer(retailerID)
 
-		// Watch the emitted event Received()
-
-		// Mark an item as Sold by calling function buyItem()
+		// Mark an item as Received by calling function receiveItem()
+		const txReceipt = await supplyChain.receiveItem(upc, {
+			from: retailerID,
+		})
 
 		// Retrieve the just now saved item from blockchain by calling function fetchItem()
+		const resultBufferOne = await supplyChain.fetchItemBufferOne.call(upc)
+		const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc)
 
 		// Verify the result set
+		assert.equal(
+			resultBufferOne[2],
+			retailerID,
+			'Error: Missing or Invalid ownerId'
+		)
+		assert.equal(
+			resultBufferTwo[7],
+			retailerID,
+			'Error: Missing or Invalid retailerID'
+		)
+		assert.equal(resultBufferTwo[5], 6, 'Error: Invalid item State')
+
+		// Watch the emitted event Received()
+		truffleAssert.eventEmitted(txReceipt, 'Received')
 	})
 
 	// 8th Test
