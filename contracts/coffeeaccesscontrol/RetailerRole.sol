@@ -17,7 +17,7 @@ contract RetailerRole {
 
   // Define a modifier that checks to see if msg.sender has the appropriate role
   modifier onlyRetailer() {
-    
+    require(isRetailer(msg.sender));
     _;
   }
 
