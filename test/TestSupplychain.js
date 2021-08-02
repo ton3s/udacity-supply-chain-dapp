@@ -137,15 +137,24 @@ contract('SupplyChain', function (accounts) {
 	it('Testing smart contract function sellItem() that allows a farmer to sell coffee', async () => {
 		const supplyChain = await SupplyChain.deployed()
 
-		// Declare and Initialize a variable for event
-
-		// Watch the emitted event ForSale()
-
 		// Mark an item as ForSale by calling function sellItem()
+		const txReceipt = await supplyChain.sellItem(upc, productPrice, {
+			from: originFarmerID,
+		})
 
 		// Retrieve the just now saved item from blockchain by calling function fetchItem()
+		const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc)
 
 		// Verify the result set
+		assert.equal(
+			resultBufferTwo[4],
+			web3.utils.toWei('1', 'ether'),
+			'Error: Missing or Invalid productPrice'
+		)
+		assert.equal(resultBufferTwo[5], 3, 'Error: Invalid item State')
+
+		// Watch the emitted event ForSale()
+		truffleAssert.eventEmitted(txReceipt, 'ForSale')
 	})
 
 	// 5th Test
