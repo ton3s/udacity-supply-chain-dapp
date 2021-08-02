@@ -1,4 +1,4 @@
-# Udacity Decentralized Star Notary
+# Udacity Supply Chain Dapp
 
 ### Libraries
 
