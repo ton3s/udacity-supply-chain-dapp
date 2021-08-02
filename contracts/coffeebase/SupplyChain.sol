@@ -244,16 +244,15 @@ contract SupplyChain {
 
   // Define a function 'shipItem' that allows the distributor to mark an item 'Shipped'
   // Use the above modifers to check if the item is sold
-  function shipItem(uint _upc) public 
-    // Call modifier to check if upc has passed previous supply chain stage
-    
-    // Call modifier to verify caller of this function
-    
-    {
+  // Call modifier to check if upc has passed previous supply chain stage
+  // Call modifier to verify caller of this function
+  function shipItem(uint _upc) sold(_upc) verifyCaller(items[_upc].distributorID) public {
+
     // Update the appropriate fields
-    
+    items[_upc].itemState = State.Shipped;
+
     // Emit the appropriate event
-    
+    emit Shipped(_upc);
   }
 
   // Define a function 'receiveItem' that allows the retailer to mark an item 'Received'
@@ -283,32 +282,28 @@ contract SupplyChain {
   }
 
   // Define a function 'fetchItemBufferOne' that fetches the data
-  function fetchItemBufferOne(uint _upc) public view returns 
-  (
-  uint    itemSKU,
-  uint    itemUPC,
-  address ownerID,
-  address originFarmerID,
-  string  memory originFarmName,
-  string  memory originFarmInformation,
-  string  memory originFarmLatitude,
-  string  memory originFarmLongitude
-  ) 
-  {
-  // Assign values to the 8 parameters
+  function fetchItemBufferOne(uint _upc) public view returns (
+    uint    itemSKU,
+    uint    itemUPC,
+    address ownerID,
+    address originFarmerID,
+    string  memory originFarmName,
+    string  memory originFarmInformation,
+    string  memory originFarmLatitude,
+    string  memory originFarmLongitude) {
   
-    
-  return 
-  (
-  itemSKU,
-  itemUPC,
-  ownerID,
-  originFarmerID,
-  originFarmName,
-  originFarmInformation,
-  originFarmLatitude,
-  originFarmLongitude
-  );
+    // Assign values to the 8 parameters
+  
+    return (
+      itemSKU,
+      itemUPC,
+      ownerID,
+      originFarmerID,
+      originFarmName,
+      originFarmInformation,
+      originFarmLatitude,
+      originFarmLongitude
+    );
   }
 
   // Define a function 'fetchItemBufferTwo' that fetches the data
