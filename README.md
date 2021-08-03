@@ -4,7 +4,7 @@
 
 ```
 # dotenv
-Used to  load environment variables from a .env file
+Used to load environment variables from a .env file
 
 # truffle-assertions
 Helper library to assist with checking for events
@@ -59,3 +59,41 @@ Deploying 'SupplyChain'
 > contract address:    0xbaC23F1dFfe7f625BBffdDC8c26a10b91bBf4CFC
 > account:             0x85C2A38b0251fbe7E5bDBb43f34212c0E32e9D3B
 ```
+
+### Setup
+
+#### Smart Contracts
+
+```
+# Configure a .env file with the following:
+INFURA_ID=<Infura-Id>
+BLOCKCHAIN_PRIVATE_KEY=<Private key of the metamask wallet address>
+
+# Compile and build the smart contracts
+truffle migrate
+```
+
+#### Web app
+
+```
+npm install
+npm run dev
+```
+
+### UML
+
+#### Activity Diagram
+
+![Activity Diagram](https://i.imgur.com/GBn0WDr.png)
+
+#### Sequence Diagram
+
+![Sequence Diagram](https://i.imgur.com/7EWzRSv.png)
+
+#### State Diagram
+
+![State Diagram](https://i.imgur.com/6JfZs3Q.png)
+
+#### Class Diagram
+
+![Class Diagram](https://i.imgur.com/czWUijg.png)
